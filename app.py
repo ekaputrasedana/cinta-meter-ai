@@ -286,10 +286,14 @@ def main():
                 df_viz = df.copy()
                 df_viz['MA_Sentiment'] = df_viz.groupby('Pengirim')['Skor_Sentimen'].transform(lambda x: x.rolling(window_size).mean())
                 
-               # --- UPDATE GRAFIK: MEMAKSA WARNA HITAM ---
+               # --- UPDATE GRAFIK: TITLE, WARNA & LABEL ---
+                # Mapping warna manual: P1 = Merah (#d62728), P2 = Biru (#1f77b4)
+                warna_pasti = {p1: '#d62728', p2: '#1f77b4'}
+                
                 fig = px.line(df_viz, x='Index', y='MA_Sentiment', color='Pengirim', 
+                              title='Grafik Mood', # Judul Grafik ditambahkan
                               labels={'Index': 'Urutan Pesan', 'MA_Sentiment': 'Mood (Positif/Negatif)'},
-                              color_discrete_sequence=['#d62728', '#1f77b4'],
+                              color_discrete_map=warna_pasti, # Menggunakan mapping warna manual
                               template="plotly_white") # Memaksa tema terang
                 
                 fig.update_layout(
@@ -306,12 +310,21 @@ def main():
                 fig.update_yaxes(title_font=dict(color='#000000'), tickfont=dict(color='#000000'), showgrid=True, gridcolor='#e1e4e8')
                 
                 st.plotly_chart(fig, use_container_width=True)
-
+                
+                # Keterangan Legenda Manual
+                st.markdown(f"""
+                <div style='text-align:center; margin-top: -10px; margin-bottom: 30px;'>
+                    <span style='color:#d62728; font-weight:bold; font-size:1.1rem;'>🔴 {p1}</span> 
+                    &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; 
+                    <span style='color:#1f77b4; font-weight:bold; font-size:1.1rem;'>🔵 {p2}</span>
+                </div>
+                """, unsafe_allow_html=True)
         except Exception as e:
             st.error(f"Gagal memproses file. Error: {e}")
 
 if __name__ == "__main__":
     main()
+
 
 
 
