@@ -151,6 +151,15 @@ def bersihkan_teks(teks):
 
 # --- LOGIKA SENTIMEN ---
 def analyze_sentiment(df, nlp_model):
+    # --- TAMBAHAN: BATASI PESAN AGAR CEPAT ---
+    # Jika chat lebih dari 1500, ambil 1500 terakhir saja
+    limit = 2000
+    if len(df) > limit:
+        # Memberi info ke user kalau data dipotong
+        st.warning(f"File terlalu besar ({len(df)} pesan). Menganalisis {limit} pesan terakhir saja agar tidak timeout.")
+        df = df.tail(limit).reset_index(drop=True)
+    # -----------------------------------------
+
     results = []
     my_bar = st.progress(0)
     total = len(df)
@@ -289,5 +298,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
