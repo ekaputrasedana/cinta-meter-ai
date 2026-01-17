@@ -8,7 +8,7 @@ from transformers import pipeline
 
 # --- KONFIGURASI HALAMAN ---
 st.set_page_config(
-    page_title="CintaMeter AI 💖",
+    page_title="CintaMeter AI",
     page_icon="💖",
     layout="centered"
 )
@@ -174,7 +174,7 @@ def analyze_sentiment(df, nlp_model):
 # --- MAIN APP UI ---
 def main():
     # Header
-    st.markdown("<h1>CintaMeter AI</h1>", unsafe_allow_html=True)
+    st.markdown("<h1>CintaMeter AI 💖</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; margin-bottom: 30px;'><b>Analisis Kecocokan Pasangan</b><br>Unggah riwayat chat WhatsApp (.txt) untuk melihat hasilnya.</p>", unsafe_allow_html=True)
 
     # Container Utama
@@ -289,4 +289,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
