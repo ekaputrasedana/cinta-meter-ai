@@ -205,7 +205,7 @@ def main():
                 # Kita potong DataFrame-nya DI SINI
                 df = df.tail(limit).reset_index(drop=True)
             
-            st.success(f"✅ Siap menganalisis {len(df)} pesan percakapan."
+            st.success(f"✅ Siap menganalisis {len(df)} pesan percakapan.")
             
             # Tombol Analisis Besar
             st.write("")
@@ -305,6 +305,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
