@@ -286,18 +286,25 @@ def main():
                 df_viz = df.copy()
                 df_viz['MA_Sentiment'] = df_viz.groupby('Pengirim')['Skor_Sentimen'].transform(lambda x: x.rolling(window_size).mean())
                 
-                # Warna Grafik Kontras
+               # --- UPDATE GRAFIK: MEMAKSA WARNA HITAM ---
                 fig = px.line(df_viz, x='Index', y='MA_Sentiment', color='Pengirim', 
-                              labels={'Index': 'Waktu', 'MA_Sentiment': 'Mood'},
-                              color_discrete_sequence=['#d62728', '#1f77b4']) # Merah Tua & Biru Tua
+                              labels={'Index': 'Urutan Pesan', 'MA_Sentiment': 'Mood (Positif/Negatif)'},
+                              color_discrete_sequence=['#d62728', '#1f77b4'],
+                              template="plotly_white") # Memaksa tema terang
                 
-                # Update layout grafik agar background putih bersih
                 fig.update_layout(
                     paper_bgcolor='rgba(0,0,0,0)', 
                     plot_bgcolor='#f8f9fa',
-                    font=dict(color='#2c3e50')
+                    # Memaksa seluruh font menjadi Hitam Pekat (#000000)
+                    font=dict(color='#000000', family='Nunito, sans-serif', size=14),
+                    title_font_color="#000000",
+                    legend_title_font_color="#000000"
                 )
-                fig.add_hline(y=0, line_dash="dash", line_color="gray")
+                
+                # Memaksa warna sumbu X dan Y menjadi hitam
+                fig.update_xaxes(title_font=dict(color='#000000'), tickfont=dict(color='#000000'), showgrid=True, gridcolor='#e1e4e8')
+                fig.update_yaxes(title_font=dict(color='#000000'), tickfont=dict(color='#000000'), showgrid=True, gridcolor='#e1e4e8')
+                
                 st.plotly_chart(fig, use_container_width=True)
 
         except Exception as e:
@@ -305,6 +312,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
