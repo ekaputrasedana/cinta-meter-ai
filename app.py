@@ -8,7 +8,7 @@ from transformers import pipeline
 
 # --- KONFIGURASI HALAMAN ---
 st.set_page_config(
-    page_title="CintaMeter AI",
+    page_title="CintaMeter AI 💖",
     page_icon="💖",
     layout="centered"
 )
@@ -193,7 +193,7 @@ def main():
             
             # Tombol Analisis Besar
             st.write("")
-            if st.button("MULAI ANALISIS SEKARANG"):
+            if st.button("Mulai Analisis Sekarang!"):
                 with st.spinner('⏳ Sedang menganalisis kata-kata kalian...'):
                     nlp_model = load_model()
                     df['Skor_Sentimen'] = analyze_sentiment(df, nlp_model)
@@ -289,3 +289,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
