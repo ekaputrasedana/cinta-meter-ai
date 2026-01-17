@@ -182,11 +182,9 @@ def analyze_sentiment(df, nlp_model):
 
 # --- MAIN APP UI ---
 def main():
-    # Header
-    st.markdown("<h1>CintaMeter AI 💖</h1>", unsafe_allow_html=True)
+    st.markdown("<h1>CintaMeter AI</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; margin-bottom: 30px;'><b>Analisis Kecocokan Pasangan</b><br>Unggah riwayat chat WhatsApp (.txt) untuk melihat hasilnya.</p>", unsafe_allow_html=True)
 
-    # Container Utama
     with st.container():
         st.markdown("<div class='clean-card'><h4>📂 Upload File Chat</h4><p style='font-size:0.9rem;'>Pastikan format ekspor WhatsApp benar (tanpa media).</p></div>", unsafe_allow_html=True)
         uploaded_file = st.file_uploader("", type="txt", label_visibility="collapsed")
@@ -198,7 +196,16 @@ def main():
             df['Pesan_Bersih'] = df['Pesan'].apply(bersihkan_teks)
             df = df[df['Pesan_Bersih'] != ""]
             
-            st.success(f"✅ Data terbaca: {len(df)} pesan.")
+            # --- PERBAIKAN DI SINI: LIMIT DATA SEBELUM ANALISIS ---
+            total_chat = len(df)
+            limit = 2000 # Batas maksimal chat yang dianalisis agar tidak error
+            
+            if total_chat > limit:
+                st.warning(f"⚠️ Chat kamu sangat banyak ({total_chat} pesan). Demi kecepatan, AI hanya akan menganalisis {limit} pesan terakhir.")
+                # Kita potong DataFrame-nya DI SINI
+                df = df.tail(limit).reset_index(drop=True)
+            
+            st.success(f"✅ Siap menganalisis {len(df)} pesan percakapan."
             
             # Tombol Analisis Besar
             st.write("")
@@ -298,6 +305,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
