@@ -10,99 +10,100 @@ from transformers import pipeline
 st.set_page_config(
     page_title="CintaMeter AI",
     page_icon="💖",
-    layout="centered"  # Mengubah layout jadi centered agar fokus di tengah (seperti aplikasi HP)
+    layout="centered"
 )
 
-# --- CUSTOM CSS & FONTS (UI MEWAH) ---
+# --- CUSTOM CSS (HIGH CONTRAST & READABLE) ---
 st.markdown("""
 <style>
     /* Import Google Fonts */
-    @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;800&family=Pacifico&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=Pacifico&display=swap');
 
-    /* Background Utama dengan Gradasi Lembut */
+    /* Background Aplikasi: Abu-abu sangat muda agar tidak silau */
     .stApp {
-        background: linear-gradient(135deg, #FFF0F5 0%, #FFE4E1 100%);
-        font-family: 'Nunito', sans-serif;
+        background-color: #f8f9fa;
     }
 
     /* Judul Utama */
     h1 {
         font-family: 'Pacifico', cursive;
-        color: #FF4B4B;
+        color: #ff2b2b; /* Merah yang lebih gelap agar terbaca */
         text-align: center;
-        font-size: 3.5rem !important;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        margin-bottom: 0px;
+        font-size: 3rem !important;
+        margin-bottom: 10px;
     }
     
-    /* Subjudul */
-    h3 {
+    /* Subjudul & Teks Biasa */
+    p, .stMarkdown {
         font-family: 'Nunito', sans-serif;
-        font-weight: 800;
-        color: #555;
+        color: #2c3e50 !important; /* Biru gelap hampir hitam */
+        font-size: 1.1rem;
     }
 
-    /* Card Style (Glassmorphism) */
-    .glass-card {
-        background: rgba(255, 255, 255, 0.7);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border-radius: 20px;
-        padding: 20px;
-        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.18);
+    /* Card Style: PUTIH SOLID (Bukan transparan) agar tulisan jelas */
+    .clean-card {
+        background-color: #ffffff;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Bayangan lembut */
+        border: 1px solid #e1e4e8;
         margin-bottom: 20px;
         text-align: center;
     }
 
-    /* Styling Tombol Upload */
+    /* Tombol Upload */
     .stFileUploader {
+        background-color: #ffffff;
         padding: 20px;
-        border: 2px dashed #FF4B4B;
-        border-radius: 15px;
-        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: 10px;
+        border: 2px dashed #ff2b2b;
     }
 
-    /* Styling Tombol Analisis */
+    /* Tombol Analisis */
     .stButton>button {
         width: 100%;
-        background: linear-gradient(90deg, #FF4B4B 0%, #FF6B6B 100%);
-        color: white;
+        background-color: #ff2b2b; /* Merah solid */
+        color: white !important;
         border: none;
-        border-radius: 50px;
-        height: 60px;
-        font-size: 20px;
-        font-weight: 800;
+        border-radius: 10px;
+        height: 55px;
+        font-size: 18px;
+        font-weight: 900;
         font-family: 'Nunito', sans-serif;
-        box-shadow: 0 4px 15px rgba(255, 75, 75, 0.4);
-        transition: all 0.3s ease;
+        box-shadow: 0 4px 0 #c92222; /* Efek tombol timbul */
+        transition: all 0.1s;
     }
-    .stButton>button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(255, 75, 75, 0.6);
+    .stButton>button:active {
+        transform: translateY(4px);
+        box-shadow: none;
     }
 
     /* Angka Skor Besar */
     .big-score {
-        font-family: 'Fredoka One', cursive;
-        font-size: 80px;
-        background: -webkit-linear-gradient(#FF4B4B, #FF8E53);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        font-family: 'Nunito', sans-serif;
+        font-weight: 900;
+        font-size: 70px;
+        color: #ff2b2b;
         margin: 0;
         line-height: 1;
     }
     
-    /* Teks User Profile */
+    /* Label User */
     .user-name {
-        font-weight: 800;
-        font-size: 1.2rem;
-        color: #333;
+        font-weight: 900;
+        font-size: 1.4rem;
+        color: #1a1a1a; /* Hitam pekat */
         margin-bottom: 5px;
     }
     .user-stat {
-        font-size: 0.9rem;
-        color: #666;
+        font-size: 1rem;
+        color: #4a4a4a; /* Abu tua */
+        font-weight: 600;
+    }
+    
+    /* Garis Pemisah */
+    hr {
+        border-top: 2px solid #eee;
     }
 
 </style>
@@ -174,11 +175,11 @@ def analyze_sentiment(df, nlp_model):
 def main():
     # Header
     st.markdown("<h1>CintaMeter AI</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: #666; margin-bottom: 30px;'>Seberapa cocok kalian berdasarkan chat WhatsApp? Biarkan AI yang menilai! 💘</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; margin-bottom: 30px;'><b>Analisis Kecocokan Pasangan</b><br>Unggah riwayat chat WhatsApp (.txt) untuk melihat hasilnya.</p>", unsafe_allow_html=True)
 
     # Container Utama
     with st.container():
-        st.markdown("<div class='glass-card'><h4>📂 Langkah 1: Upload Chat</h4><p style='font-size:0.9rem; color:#888;'>Ekspor chat WA ke .txt (tanpa media) lalu upload di sini.</p></div>", unsafe_allow_html=True)
+        st.markdown("<div class='clean-card'><h4>📂 Upload File Chat</h4><p style='font-size:0.9rem;'>Pastikan format ekspor WhatsApp benar (tanpa media).</p></div>", unsafe_allow_html=True)
         uploaded_file = st.file_uploader("", type="txt", label_visibility="collapsed")
 
     if uploaded_file is not None:
@@ -188,12 +189,12 @@ def main():
             df['Pesan_Bersih'] = df['Pesan'].apply(bersihkan_teks)
             df = df[df['Pesan_Bersih'] != ""]
             
-            st.info(f"✅ Berhasil membaca {len(df)} pesan. Siap dianalisis!")
+            st.success(f"✅ Data terbaca: {len(df)} pesan.")
             
             # Tombol Analisis Besar
             st.write("")
-            if st.button("✨ Cek Kecocokan Kami! ✨"):
-                with st.spinner('🔍 Sedang membaca perasaan kalian...'):
+            if st.button("MULAI ANALISIS SEKARANG"):
+                with st.spinner('⏳ Sedang menganalisis kata-kata kalian...'):
                     nlp_model = load_model()
                     df['Skor_Sentimen'] = analyze_sentiment(df, nlp_model)
                 
@@ -218,66 +219,73 @@ def main():
                 score_balance = balance_ratio * 100
                 final_match_score = (score_positivity * 0.6) + (score_balance * 0.4)
                 
-                # --- TAMPILAN DASHBOARD HASIL ---
+                # --- TAMPILAN HASIL ---
                 st.write("---")
                 
-                # Skor Utama
-                st.markdown(f"""
-                <div class='glass-card'>
-                    <h2 style='margin:0; color:#555;'>Tingkat Kecocokan</h2>
-                    <div class='big-score'>{final_match_score:.1f}%</div>
-                </div>
-                """, unsafe_allow_html=True)
-
-                # Kesimpulan
+                # Kesimpulan Warna Warni tapi Jelas
                 if final_match_score > 80:
                     st.balloons()
-                    msg = "😍 MATCH MADE IN HEAVEN! Kalian sangat cocok!"
-                    alert_type = st.success
+                    match_color = "#28a745" # Hijau
+                    msg = "SANGAT COCOK! Chemistry Kuat."
                 elif final_match_score > 60:
                     st.balloons()
-                    msg = "🥰 COCOK! Hubungan yang sehat dan positif."
-                    alert_type = st.info
+                    match_color = "#17a2b8" # Biru
+                    msg = "COCOK. Komunikasi Positif."
                 else:
-                    msg = "🤔 PERLU USAHA. Komunikasi bisa ditingkatkan lagi."
-                    alert_type = st.warning
-                alert_type(msg)
+                    match_color = "#ffc107" # Kuning
+                    msg = "NETRAL / PERLU USAHA."
+
+                # Skor Utama
+                st.markdown(f"""
+                <div class='clean-card' style='border: 2px solid {match_color};'>
+                    <h3 style='margin:0; color:#555;'>SKOR KECOCOKAN</h3>
+                    <div class='big-score' style='color:{match_color}'>{final_match_score:.1f}%</div>
+                    <h4 style='color:{match_color}; margin-top:10px;'>{msg}</h4>
+                </div>
+                """, unsafe_allow_html=True)
 
                 # Card Statistik Kiri Kanan
                 c1, c2 = st.columns(2)
                 with c1:
                     st.markdown(f"""
-                    <div class='glass-card'>
+                    <div class='clean-card'>
                         <div class='user-name'>{p1}</div>
-                        <div class='user-stat'>🗣️ {count_p1} Chat</div>
-                        <div class='user-stat'>😊 Vibe: {sentimen_p1:.2f}</div>
+                        <div class='user-stat'>💬 {count_p1} Chat</div>
+                        <div class='user-stat'>❤️ Vibe: {sentimen_p1:.2f}</div>
                     </div>
                     """, unsafe_allow_html=True)
                 with c2:
                     st.markdown(f"""
-                    <div class='glass-card'>
+                    <div class='clean-card'>
                         <div class='user-name'>{p2}</div>
-                        <div class='user-stat'>🗣️ {count_p2} Chat</div>
-                        <div class='user-stat'>😊 Vibe: {sentimen_p2:.2f}</div>
+                        <div class='user-stat'>💬 {count_p2} Chat</div>
+                        <div class='user-stat'>❤️ Vibe: {sentimen_p2:.2f}</div>
                     </div>
                     """, unsafe_allow_html=True)
 
                 # Grafik Timeline
-                st.markdown("### 📈 Grafik Perasaan (Timeline)")
+                st.markdown("### 📈 Grafik Mood Percakapan")
                 df['Index'] = range(len(df))
                 window_size = max(5, int(len(df)/20))
                 df_viz = df.copy()
                 df_viz['MA_Sentiment'] = df_viz.groupby('Pengirim')['Skor_Sentimen'].transform(lambda x: x.rolling(window_size).mean())
                 
+                # Warna Grafik Kontras
                 fig = px.line(df_viz, x='Index', y='MA_Sentiment', color='Pengirim', 
                               labels={'Index': 'Waktu', 'MA_Sentiment': 'Mood'},
-                              color_discrete_sequence=['#FF4B4B', '#4B7BFF'])
-                fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
+                              color_discrete_sequence=['#d62728', '#1f77b4']) # Merah Tua & Biru Tua
+                
+                # Update layout grafik agar background putih bersih
+                fig.update_layout(
+                    paper_bgcolor='rgba(0,0,0,0)', 
+                    plot_bgcolor='#f8f9fa',
+                    font=dict(color='#2c3e50')
+                )
                 fig.add_hline(y=0, line_dash="dash", line_color="gray")
                 st.plotly_chart(fig, use_container_width=True)
 
         except Exception as e:
-            st.error(f"Gagal memproses file. Pastikan format txt WhatsApp benar. Error: {e}")
+            st.error(f"Gagal memproses file. Error: {e}")
 
 if __name__ == "__main__":
     main()
