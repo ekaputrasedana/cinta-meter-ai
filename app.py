@@ -153,7 +153,7 @@ def bersihkan_teks(teks):
 def analyze_sentiment(df, nlp_model):
     # --- TAMBAHAN: BATASI PESAN AGAR CEPAT ---
     # Jika chat lebih dari 1500, ambil 1500 terakhir saja
-    limit = 5000
+    limit = 10000
     if len(df) > limit:
         # Memberi info ke user kalau data dipotong
         st.warning(f"File terlalu besar ({len(df)} pesan). Menganalisis {limit} pesan terakhir saja agar tidak timeout.")
@@ -198,7 +198,7 @@ def main():
             
             # --- PERBAIKAN DI SINI: LIMIT DATA SEBELUM ANALISIS ---
             total_chat = len(df)
-            limit = 5000 # Batas maksimal chat yang dianalisis agar tidak error
+            limit = 10000 # Batas maksimal chat yang dianalisis agar tidak error
             
             if total_chat > limit:
                 st.warning(f"⚠️ Chat kamu sangat banyak ({total_chat} pesan). Demi kecepatan, AI hanya akan menganalisis {limit} pesan terakhir.")
@@ -324,6 +324,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
